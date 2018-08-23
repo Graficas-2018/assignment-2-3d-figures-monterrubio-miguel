@@ -77,7 +77,7 @@ function createScutoid(gl, translation, rotationAxis)
     vertexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
 
-    var vertices = [6, 5, 4, 4, 4, 3, 5]
+    var vertices = [6, 5, 4, 4, 4, 3, 5, 5]
 
     var v1 = [-0.7, 1.5, 1.0];
     var v2 = [-1.5,  1.5,  0.0];
@@ -153,32 +153,26 @@ function createScutoid(gl, translation, rotationAxis)
     gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
     var faceColors = [
         [1.0, 0.0, 0.0, 1.0], // color 1
-        [1.0, 0.0, 1.0, 1.0], // color 2
+        [0.0, 1.0, 0.0, 1.0], // color 2
         [0.0, 0.0, 1.0, 1.0], // color 3
         [0.0, 1.0, 1.0, 1.0], // color 4 
-        [0.0, 1.0, 0.0, 1.0], // color 5
-        [1.0, 1.0, 0.0, 1.0], // color 6
-        [1.0, 0.0, 0.0, 1.0], // color 1
-        [1.0, 0.0, 1.0, 1.0], // color 2
-        [0.0, 0.0, 1.0, 1.0], // color 3
-        [0.0, 1.0, 1.0, 1.0], // color 4 
-        [0.0, 1.0, 0.0, 1.0], // color 5
-        [1.0, 1.0, 0.0, 1.0], // color 6
-
+        [1.0, 1.0, 0.0, 1.0], // color 5
+        [1.0, 0.0, 1.0, 1.0], // color 6
+        [0.1, 0.3, 0.8, 1.0], // color 7
+        [0.4, 0.6, 0.2, 1.0], // color 8
     ];
 
     // Each vertex must have the color information, that is why the same color is concatenated 4 times, one for each vertex of the scutoid's face.
     var vertexColors = [];
-    // for (var i in faceColors) 
-    // {
-    //     var color = faceColors[i];
-    //     for (var j=0; j < 4; j++)
-    //         vertexColors = vertexColors.concat(color);
-    // }
-    for (const color of faceColors) 
+
+    var j = 0;
+    for (const color of faceColors)
     {
-        for (var j=0; j < 3; j++)
+        for (var k=0; k < vertices[j]; k++)
+        {
             vertexColors = vertexColors.concat(color);
+        }
+        j++
     }
 
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexColors), gl.STATIC_DRAW);
