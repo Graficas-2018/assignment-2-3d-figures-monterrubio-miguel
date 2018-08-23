@@ -16,9 +16,10 @@
 			    var gl = initWebGL(canvas);
 		        initViewport(gl, canvas);
 		        initGL(canvas);
-				initShader(gl);
 				// TO DO: create and draw the figures
-				run(gl, []);
+				var scutoid = createScutoid(gl, [0, 0, -6], [1, 1, 0]);
+				initShader(gl);
+				run(gl, [scutoid]);
 			}
 	);
 

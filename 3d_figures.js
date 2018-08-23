@@ -3,7 +3,7 @@ var projectionMatrix;
 var shaderProgram, shaderVertexPositionAttribute, shaderVertexColorAttribute, 
     shaderProjectionMatrixUniform, shaderModelViewMatrixUniform;
 
-var duration = 5000; // ms
+var duration = 8000; // ms
 
 // Attributes: Input variables used in the vertex shader. Since the vertex shader is called on each vertex, these will be different every time the vertex shader is invoked.
 // Uniforms: Input variables for both the vertex and fragment shaders. These do not change values from vertex to vertex.
@@ -70,6 +70,162 @@ function initGL(canvas)
 }
 
 // TO DO: Create the functions for each of the figures.
+function createScutoid(gl, translation, rotationAxis)
+{    
+    // Vertex Data
+    var vertexBuffer;
+    vertexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+
+    var vertices = [6, 5, 4, 4, 4, 3, 5]
+
+    var v1 = [-0.7, 1.5, 1.0];
+    var v2 = [-1.5,  1.5,  0.0];
+    var v3 = [-0.7,  1.5, -1.2];
+    var v4 = [0.7,  1.5,  1.0];
+    var v5 = [1.5,  1.5,  0.0];
+    var v6 = [0.7,  1.5, -1.2];
+    var v7 = [0.0, -1.5,  1.0];
+    var v8 = [-0.9, -1.5,  0.2];
+    var v9 = [0.9, -1.5,  0.2];
+    var v10 = [0.6, -1.5, -1.0];
+    var v11 = [-0.6, -1.5, -1.0];
+    var v12 = [0.0,  0.0,  1.4];
+
+    var verts = [
+       // Top face
+        ...v1, 
+        ...v2, 
+        ...v3, 
+        ...v4, 
+        ...v5, 
+        ...v6, 
+
+       // Bottom face
+        ...v7, 
+        ...v8, 
+        ...v9, 
+        ...v10, 
+        ...v11,
+
+       // Rectangle face 1
+        ...v6,
+        ...v3, 
+        ...v11, 
+        ...v10, 
+
+       // Rectangle face 2
+        ...v2, 
+        ...v3, 
+        ...v8, 
+        ...v11,
+
+       // Rectangle face 3
+        ...v5, 
+        ...v6, 
+        ...v9, 
+        ...v10,
+
+       // Triangle face DONE
+        ...v1, 
+        ...v4,
+        ...v12, 
+
+       // Weird face 1
+        ...v2, 
+        ...v1,
+        ...v12,
+        ...v8,
+        ...v7,
+
+       // Weird face 2
+        ...v12, 
+        ...v7, 
+        ...v4, 
+        ...v5, 
+        ...v9, 
+       ];
+       
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verts), gl.STATIC_DRAW);
+
+    // Color data
+    var colorBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+    var faceColors = [
+        [1.0, 0.0, 0.0, 1.0], // color 1
+        [1.0, 0.0, 1.0, 1.0], // color 2
+        [0.0, 0.0, 1.0, 1.0], // color 3
+        [0.0, 1.0, 1.0, 1.0], // color 4 
+        [0.0, 1.0, 0.0, 1.0], // color 5
+        [1.0, 1.0, 0.0, 1.0], // color 6
+        [1.0, 0.0, 0.0, 1.0], // color 1
+        [1.0, 0.0, 1.0, 1.0], // color 2
+        [0.0, 0.0, 1.0, 1.0], // color 3
+        [0.0, 1.0, 1.0, 1.0], // color 4 
+        [0.0, 1.0, 0.0, 1.0], // color 5
+        [1.0, 1.0, 0.0, 1.0], // color 6
+
+    ];
+
+    // Each vertex must have the color information, that is why the same color is concatenated 4 times, one for each vertex of the scutoid's face.
+    var vertexColors = [];
+    // for (var i in faceColors) 
+    // {
+    //     var color = faceColors[i];
+    //     for (var j=0; j < 4; j++)
+    //         vertexColors = vertexColors.concat(color);
+    // }
+    for (const color of faceColors) 
+    {
+        for (var j=0; j < 3; j++)
+            vertexColors = vertexColors.concat(color);
+    }
+
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexColors), gl.STATIC_DRAW);
+
+    // Index data (defines the triangles to be drawn).
+    var scutoidIndexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, scutoidIndexBuffer);
+    var scutoidIndices = [
+        0, 1, 2,      0, 2, 3,      3, 2, 5,      3, 4, 5,    // Top face
+        6, 7, 10,     6, 8, 9,      6, 9, 10,                 // Bottom face
+        11, 12, 14,   12, 13, 14,                              // Rect 1 face
+        15, 16, 18,   15, 17, 18,                             // Rect 2 face
+        19, 20, 21,   20, 21, 22,                             // Rect 3 face
+        23, 24, 25,                                           // Triangle face
+        26, 27, 29,   27, 28, 29,   28, 29, 30,                // Weird 1 face
+        33, 34, 35,   31, 33, 35,   31, 32, 35                // Weird 2 face
+    ];
+
+    // gl.ELEMENT_ARRAY_BUFFER: Buffer used for element indices.
+    // Uint16Array: Array of 16-bit unsigned integers.
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(scutoidIndices), gl.STATIC_DRAW);
+    
+    var scutoid = {
+            buffer:vertexBuffer, colorBuffer:colorBuffer, indices:scutoidIndexBuffer,
+            vertSize:3, nVerts:36, colorSize:4, nColors: 36, nIndices:60,
+            primtype:gl.TRIANGLES, modelViewMatrix: mat4.create(), currentTime : Date.now()};
+
+    mat4.translate(scutoid.modelViewMatrix, scutoid.modelViewMatrix, translation);
+
+    scutoid.update = function()
+    {
+        var now = Date.now();
+        var deltat = now - this.currentTime;
+        this.currentTime = now;
+        var fract = deltat / duration;
+        var angle = Math.PI * 2 * fract;
+    
+        // Rotates a mat4 by the given angle
+        // mat4 out the receiving matrix
+        // mat4 a the matrix to rotate
+        // Number rad the angle to rotate the matrix by
+        // vec3 axis the axis to rotate around
+        mat4.rotate(this.modelViewMatrix, this.modelViewMatrix, angle, rotationAxis);
+    };
+    
+    return scutoid;
+}
 
 function createShader(gl, str, type)
 {
