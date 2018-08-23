@@ -221,7 +221,7 @@ function createScutoid(gl, translation, rotationAxis)
     return scutoid;
 }
 
-function createScone(gl, translation, rotationAxis)
+function createOcta(gl, translation, rotationAxis)
 {    
     // Vertex Data
     var vertexBuffer;
