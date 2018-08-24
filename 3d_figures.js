@@ -77,12 +77,12 @@ function createOcta(gl, translation, rotationAxis)
     vertexBuffer2 = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer2);
 
-    var v1 = [0.0, -1.0, 0.0];
-    var v2 = [-1.0, 0.0, 0.0];
-    var v3 = [0.0, 0.0, 1.0];
-    var v4 = [1.0, 0.0, 0.0];
-    var v5 = [0.0, 0.0, -1.0];
-    var v6 = [0.0, 1.0, 0.0];
+    var v1 = [0.0, -1.5, 0.0];
+    var v2 = [-1.5, 0.0, 0.0];
+    var v3 = [0.0, 0.0, 1.5];
+    var v4 = [1.5, 0.0, 0.0];
+    var v5 = [0.0, 0.0, -1.5];
+    var v6 = [0.0, 1.5, 0.0];
 
 
     var verts = [
