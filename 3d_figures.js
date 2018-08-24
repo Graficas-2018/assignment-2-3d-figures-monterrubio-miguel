@@ -349,73 +349,46 @@ function createPyramid(gl, translation, rotationAxis)
     vertexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
 
-    var vertices = [6, 5, 4, 4, 4, 3, 5, 5]
+    var vertices = [5, 3, 3, 3, 3, 3]
 
-    var v1 = [-0.7, 1.5, 1.0];
-    var v2 = [-1.5,  1.5,  0.0];
-    var v3 = [-0.7,  1.5, -1.2];
-    var v4 = [0.7,  1.5,  1.0];
-    var v5 = [1.5,  1.5,  0.0];
-    var v6 = [0.7,  1.5, -1.2];
-    var v7 = [0.0, -1.5,  1.0];
-    var v8 = [-0.9, -1.5,  0.2];
-    var v9 = [0.9, -1.5,  0.2];
-    var v10 = [0.6, -1.5, -1.0];
-    var v11 = [-0.6, -1.5, -1.0];
-    var v12 = [0.0,  0.0,  1.4];
+    var v1 = [0.0, -1.5, -1.0];
+    var v2 = [-.95, -1.5, -.31];
+    var v3 = [-.59, -1.5, .81];
+    var v4 = [.59, -1.5, .81];
+    var v5 = [.95, -1.5, -.31];
+    var v6 = [0.0, 1.0, 0.0];
 
     var verts = [
-       // Top face
-        ...v1, 
-        ...v2, 
-        ...v3, 
-        ...v4, 
-        ...v5, 
-        ...v6, 
+       //Pentagon base
+       ...v1,
+       ...v2,
+       ...v3,
+       ...v4,
+       ...v5,
 
-       // Bottom face
-        ...v7, 
-        ...v8, 
-        ...v9, 
-        ...v10, 
-        ...v11,
+       //tri face 1
+       ...v1,
+       ...v2,
+       ...v6,
 
-       // Rectangle face 1
-        ...v6,
-        ...v3, 
-        ...v11, 
-        ...v10, 
+       //tri face 2
+       ...v2,
+       ...v3,
+       ...v6,
 
-       // Rectangle face 2
-        ...v2, 
-        ...v3, 
-        ...v8, 
-        ...v11,
+       //tri face 3
+       ...v3,
+       ...v4,
+       ...v6,
+       //tri face 4
+       ...v4,
+       ...v5,
+       ...v6,
 
-       // Rectangle face 3
-        ...v5, 
-        ...v6, 
-        ...v9, 
-        ...v10,
-
-       // Triangle face DONE
-        ...v1, 
-        ...v4,
-        ...v12, 
-
-       // Weird face 1
-        ...v2, 
-        ...v1,
-        ...v12,
-        ...v8,
-        ...v7,
-
-       // Weird face 2
-        ...v12, 
-        ...v7, 
-        ...v4, 
-        ...v5, 
-        ...v9, 
+       //tri face 5
+       ...v5,
+       ...v1,
+       ...v6,
        ];
        
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verts), gl.STATIC_DRAW);
@@ -430,11 +403,9 @@ function createPyramid(gl, translation, rotationAxis)
         [0.0, 1.0, 1.0, 1.0], // color 4 
         [1.0, 1.0, 0.0, 1.0], // color 5
         [1.0, 0.0, 1.0, 1.0], // color 6
-        [0.1, 0.3, 0.8, 1.0], // color 7
-        [0.4, 0.6, 0.2, 1.0], // color 8
     ];
 
-    // Each vertex must have the color information, that is why the same color is concatenated 4 times, one for each vertex of the scutoid's face.
+    // Each vertex must have the color information, that is why the same color is concatenated 4 times, one for each vertex of the pyramid's face.
     var vertexColors = [];
 
     var j = 0;
@@ -453,28 +424,26 @@ function createPyramid(gl, translation, rotationAxis)
     var scutoidIndexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, scutoidIndexBuffer);
     var scutoidIndices = [
-        0, 1, 2,      0, 2, 3,      3, 2, 5,      3, 4, 5,    // Top face
-        6, 7, 10,     6, 8, 9,      6, 9, 10,                 // Bottom face
-        11, 12, 14,   12, 13, 14,                              // Rect 1 face
-        15, 16, 18,   15, 17, 18,                             // Rect 2 face
-        19, 20, 21,   20, 21, 22,                             // Rect 3 face
-        23, 24, 25,                                           // Triangle face
-        26, 27, 29,   27, 28, 29,   28, 29, 30,                // Weird 1 face
-        33, 34, 35,   31, 33, 35,   31, 32, 35                // Weird 2 face
+        0, 1, 2,    0, 2, 3,    0, 3, 4,    //pengaton base
+        5, 6, 7,                            //tri face 1
+        8, 9, 10,                           //tri face 2
+        11, 12, 13,                         //tri face 3
+        14, 15, 16,                         //tri face 4
+        17, 18, 19                          //tri face 5
     ];
 
     // gl.ELEMENT_ARRAY_BUFFER: Buffer used for element indices.
     // Uint16Array: Array of 16-bit unsigned integers.
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(scutoidIndices), gl.STATIC_DRAW);
     
-    var scutoid = {
+    var pyramid = {
             buffer:vertexBuffer, colorBuffer:colorBuffer, indices:scutoidIndexBuffer,
-            vertSize:3, nVerts:36, colorSize:4, nColors: 36, nIndices:60,
+            vertSize:3, nVerts:20, colorSize:4, nColors: 20, nIndices:24,
             primtype:gl.TRIANGLES, modelViewMatrix: mat4.create(), currentTime : Date.now()};
 
-    mat4.translate(scutoid.modelViewMatrix, scutoid.modelViewMatrix, translation);
+    mat4.translate(pyramid.modelViewMatrix, pyramid.modelViewMatrix, translation);
 
-    scutoid.update = function()
+    pyramid.update = function()
     {
         var now = Date.now();
         var deltat = now - this.currentTime;
@@ -490,7 +459,7 @@ function createPyramid(gl, translation, rotationAxis)
         mat4.rotate(this.modelViewMatrix, this.modelViewMatrix, angle, rotationAxis);
     };
     
-    return scutoid;
+    return pyramid;
 }
 
 function createShader(gl, str, type)
