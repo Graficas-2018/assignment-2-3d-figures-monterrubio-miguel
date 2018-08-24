@@ -88,44 +88,28 @@ function createOcta(gl, translation, rotationAxis)
 
     var verts = [
        //bottom face 1
-       ...v1,
-       ...v2,
-       ...v3,
+       ...v1, ...v2, ...v3,
 
        //bottom face 2
-       ...v1, 
-       ...v3, 
-       ...v4,
+       ...v1, ...v3, ...v4,
 
        //bottom face 3
-       ...v1, 
-       ...v4, 
-       ...v5,
+       ...v1, ...v4, ...v5,
 
        //bottom face 4
-       ...v1, 
-       ...v5, 
-       ...v2,
+       ...v1, ...v5, ...v2,
 
        //top face 1
-       ...v6,
-       ...v2,
-       ...v3,
+       ...v6, ...v2, ...v3,
 
        //top face 2
-       ...v6, 
-       ...v3, 
-       ...v4,
+       ...v6, ...v3, ...v4,
 
        //top face 3
-       ...v6, 
-       ...v4, 
-       ...v5,
+       ...v6, ...v4, ...v5,
 
        //top face 4
-       ...v6, 
-       ...v5, 
-       ...v2
+       ...v6, ...v5, ...v2
        ];
        
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verts), gl.STATIC_DRAW);
@@ -144,8 +128,9 @@ function createOcta(gl, translation, rotationAxis)
         [0.4, 0.6, 0.2, 1.0], // color 8
     ];
 
-    // Each vertex must have the color information, that is why the same color is concatenated 4 times, one for each vertex of the scutoid's face.
     var vertexColors = [];
+
+    // Each vertex must have the color information, that is why the same color is concatenated 3 times, one for each vertex of the octahedron's face.
 
     for (const color of faceColors) 
     {
@@ -159,7 +144,14 @@ function createOcta(gl, translation, rotationAxis)
     var scutoidIndexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, scutoidIndexBuffer);
     var scutoidIndices = [
-        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23
+        0, 1, 2,        //Face 1
+        3, 4, 5,        //Face 2
+        6, 7, 8,        //Face 3
+        9, 10, 11,      //Face 4
+        12, 13, 14,     //Face 5
+        15, 16, 17,     //Face 6
+        18, 19, 20,     //Face 7
+        21, 22, 23      //Face 8
     ];
 
     // gl.ELEMENT_ARRAY_BUFFER: Buffer used for element indices.
@@ -199,7 +191,6 @@ function createScutoid(gl, translation, rotationAxis)
     vertexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
 
-    var vertices = [6, 5, 4, 4, 4, 3, 5, 5]
 
     var v1 = [-0.7, 1.5, 1.0];
     var v2 = [-1.5,  1.5,  0.0];
@@ -216,56 +207,28 @@ function createScutoid(gl, translation, rotationAxis)
 
     var verts = [
        // Top face
-        ...v1, 
-        ...v2, 
-        ...v3, 
-        ...v4, 
-        ...v5, 
-        ...v6, 
+        ...v1, ...v2, ...v3, ...v4, ...v5, ...v6, 
 
        // Bottom face
-        ...v7, 
-        ...v8, 
-        ...v9, 
-        ...v10, 
-        ...v11,
+        ...v7, ...v8, ...v9, ...v10, ...v11,
 
        // Rectangle face 1
-        ...v6,
-        ...v3, 
-        ...v11, 
-        ...v10, 
+        ...v6, ...v3, ...v11, ...v10, 
 
        // Rectangle face 2
-        ...v2, 
-        ...v3, 
-        ...v8, 
-        ...v11,
+        ...v2, ...v3, ...v8, ...v11,
 
        // Rectangle face 3
-        ...v5, 
-        ...v6, 
-        ...v9, 
-        ...v10,
+        ...v5, ...v6, ...v9, ...v10,
 
        // Triangle face DONE
-        ...v1, 
-        ...v4,
-        ...v12, 
+        ...v1, ...v4, ...v12, 
 
        // Weird face 1
-        ...v2, 
-        ...v1,
-        ...v12,
-        ...v8,
-        ...v7,
+        ...v2, ...v1, ...v12, ...v8, ...v7,
 
        // Weird face 2
-        ...v12, 
-        ...v7, 
-        ...v4, 
-        ...v5, 
-        ...v9, 
+        ...v12, ...v7, ...v4, ...v5, ...v9, 
        ];
        
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verts), gl.STATIC_DRAW);
@@ -287,6 +250,10 @@ function createScutoid(gl, translation, rotationAxis)
     // Each vertex must have the color information, that is why the same color is concatenated 4 times, one for each vertex of the scutoid's face.
     var vertexColors = [];
 
+    // For loop that assigns color to each vertex. Uses an array that has the number of vertices in each face.
+    var vertices = [6, 5, 4, 4, 4, 3, 5, 5]
+
+
     var j = 0;
     for (const color of faceColors)
     {
@@ -305,11 +272,11 @@ function createScutoid(gl, translation, rotationAxis)
     var scutoidIndices = [
         0, 1, 2,      0, 2, 3,      3, 2, 5,      3, 4, 5,    // Top face
         6, 7, 10,     6, 8, 9,      6, 9, 10,                 // Bottom face
-        11, 12, 14,   12, 13, 14,                              // Rect 1 face
+        11, 12, 14,   12, 13, 14,                             // Rect 1 face
         15, 16, 18,   15, 17, 18,                             // Rect 2 face
         19, 20, 21,   20, 21, 22,                             // Rect 3 face
         23, 24, 25,                                           // Triangle face
-        26, 27, 29,   27, 28, 29,   28, 29, 30,                // Weird 1 face
+        26, 27, 29,   27, 28, 29,   28, 29, 30,               // Weird 1 face
         33, 34, 35,   31, 33, 35,   31, 32, 35                // Weird 2 face
     ];
 
@@ -350,7 +317,7 @@ function createPyramid(gl, translation, rotationAxis, translationAxis, altTransl
     vertexBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
 
-    var vertices = [5, 3, 3, 3, 3, 3]
+    
 
     var v1 = [0.0, -.5, -1.0/2];
     var v2 = [-.95/2, -.5, -.31/2];
@@ -361,35 +328,21 @@ function createPyramid(gl, translation, rotationAxis, translationAxis, altTransl
 
     var verts = [
        //Pentagon base
-       ...v1,
-       ...v2,
-       ...v3,
-       ...v4,
-       ...v5,
+       ...v1, ...v2, ...v3, ...v4, ...v5,
 
        //tri face 1
-       ...v1,
-       ...v2,
-       ...v6,
+       ...v1, ...v2, ...v6,
 
        //tri face 2
-       ...v2,
-       ...v3,
-       ...v6,
+       ...v2, ...v3, ...v6,
 
        //tri face 3
-       ...v3,
-       ...v4,
-       ...v6,
+       ...v3, ...v4, ...v6,
        //tri face 4
-       ...v4,
-       ...v5,
-       ...v6,
+       ...v4, ...v5, ...v6,
 
        //tri face 5
-       ...v5,
-       ...v1,
-       ...v6,
+       ...v5, ...v1, ...v6,
        ];
        
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verts), gl.STATIC_DRAW);
@@ -406,8 +359,10 @@ function createPyramid(gl, translation, rotationAxis, translationAxis, altTransl
         [1.0, 0.0, 1.0, 1.0], // color 6
     ];
 
-    // Each vertex must have the color information, that is why the same color is concatenated 4 times, one for each vertex of the pyramid's face.
     var vertexColors = [];
+
+    //for loop that assigns color to each vertex. Uses an array that has the number of vertices in each face.
+    var vertices = [5, 3, 3, 3, 3, 3]
 
     var j = 0;
     for (const color of faceColors)
@@ -454,13 +409,9 @@ function createPyramid(gl, translation, rotationAxis, translationAxis, altTransl
         var fract = deltat / duration;
         var angle = Math.PI * 2 * fract;
 
-        //var timerun = 0;
+        //Variable "up" determines the direction the triangle will move each frame. 
+        //It is inverted every time the time counter reaches ~4.3 seconds, and the counter is reset
         timerun += deltat;
-        // Rotates a mat4 by the given angle
-        // mat4 out the receiving matrix
-        // mat4 a the matrix to rotate
-        // Number rad the angle to rotate the matrix by
-        // vec3 axis the axis to rotate around
         mat4.rotate(this.modelViewMatrix, this.modelViewMatrix, angle, rotationAxis);
 
         if(up)
