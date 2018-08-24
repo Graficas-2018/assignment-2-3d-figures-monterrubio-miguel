@@ -17,8 +17,8 @@
 		        initViewport(gl, canvas);
 		        initGL(canvas);
 				// TO DO: create and draw the figures
-				var scutoid = createScutoid(gl, [0, 0, -1], [0, 1, 0]);
-				var octa = createOcta(gl, [4, 0, -1], [0, 1, 0]);
+				var scutoid = createScutoid(gl, [0, 0, -1], [0.1, 1.0, 0.2]);
+				var octa = createOcta(gl, [4, 0, -1], [-0.4, 1.0, 0.1]);
 				var pyramid = createPyramid(gl, [-4, 0, -1], [0, 1, 0]);
 				initShader(gl);
 				run(gl, [scutoid, octa, pyramid]);
