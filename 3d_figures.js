@@ -331,7 +331,7 @@ function createScutoid(gl, translation, rotationAxis)
         this.currentTime = now;
         var fract = deltat / duration;
         var angle = Math.PI * 2 * fract;
-    
+        var up = false;
         // Rotates a mat4 by the given angle
         // mat4 out the receiving matrix
         // mat4 a the matrix to rotate
@@ -343,7 +343,7 @@ function createScutoid(gl, translation, rotationAxis)
     return scutoid;
 }
 
-function createPyramid(gl, translation, rotationAxis)
+function createPyramid(gl, translation, rotationAxis, translationAxis, altTranslation)
 {    
     // Vertex Data
     var vertexBuffer;
@@ -352,11 +352,11 @@ function createPyramid(gl, translation, rotationAxis)
 
     var vertices = [5, 3, 3, 3, 3, 3]
 
-    var v1 = [0.0, -1.5, -1.0];
-    var v2 = [-.95, -1.5, -.31];
-    var v3 = [-.59, -1.5, .81];
-    var v4 = [.59, -1.5, .81];
-    var v5 = [.95, -1.5, -.31];
+    var v1 = [0.0, -.5, -1.0/2];
+    var v2 = [-.95/2, -.5, -.31/2];
+    var v3 = [-.59/2, -.5, .81/2];
+    var v4 = [.59/2, -.5, .81/2];
+    var v5 = [.95/2, -.5, -.31/2];
     var v6 = [0.0, 1.0, 0.0];
 
     var verts = [
@@ -444,6 +444,8 @@ function createPyramid(gl, translation, rotationAxis)
 
     mat4.translate(pyramid.modelViewMatrix, pyramid.modelViewMatrix, translation);
 
+    var timerun = 0;
+    var up = true;
     pyramid.update = function()
     {
         var now = Date.now();
@@ -451,13 +453,33 @@ function createPyramid(gl, translation, rotationAxis)
         this.currentTime = now;
         var fract = deltat / duration;
         var angle = Math.PI * 2 * fract;
-    
+
+        //var timerun = 0;
+        timerun += deltat;
         // Rotates a mat4 by the given angle
         // mat4 out the receiving matrix
         // mat4 a the matrix to rotate
         // Number rad the angle to rotate the matrix by
         // vec3 axis the axis to rotate around
         mat4.rotate(this.modelViewMatrix, this.modelViewMatrix, angle, rotationAxis);
+
+        if(up)
+        {
+            mat4.translate(this.modelViewMatrix, this.modelViewMatrix, translationAxis);
+        }
+
+        else
+        {
+            mat4.translate(this.modelViewMatrix, this.modelViewMatrix, altTranslation);
+        }
+        
+        if(timerun >= 4300)
+        {
+            up = !up;
+            timerun = 0;
+        }
+        console.log(timerun);
+        console.log(up);
     };
     
     return pyramid;
