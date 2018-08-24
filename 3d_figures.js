@@ -66,7 +66,8 @@ function initGL(canvas)
 {
     // Create a project matrix with 45 degree field of view
     projectionMatrix = mat4.create();
-    mat4.perspective(projectionMatrix, Math.PI / 4, canvas.width / canvas.height, 1, 10000);
+    mat4.perspective(projectionMatrix, Math.PI / 32, canvas.width / canvas.height, 1, 10000);
+    mat4.translate(projectionMatrix, projectionMatrix, [0, 0, -40]);
 }
 
 // TO DO: Create the functions for each of the figures.
