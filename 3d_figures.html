@@ -1,4 +1,5 @@
-<html>
+
++<html>
 
 <head>
 <title>3d Figures</title>
@@ -17,9 +18,9 @@
 		        initViewport(gl, canvas);
 		        initGL(canvas);
 				// TO DO: create and draw the figures
-				var scutoid = createScutoid(gl, [0, 0, -1], [0.1, 1.0, 0.2]);
-				var octa = createOcta(gl, [4, 0, -1], [-0.4, 1.0, 0.1]);
-				var pyramid = createPyramid(gl, [-4, -1.5, -1], [0, 1, 0], [0, .01, 0], [0, -.01, 0]);
+				var scutoid = createScutoid(gl, [0, 0, -10], [-0.4, 1.0, 0.1]);
+				var octa = createOcta(gl, [3.5, -1.3, -5], [0, 1, 0], [0, .01, 0], [0, -.01, 0]);
+				var pyramid = createPyramid(gl, [-3.5, .3, -5], [0.1, 1.0, 0.2]);
 				initShader(gl);
 				run(gl, [scutoid, octa, pyramid]);
 			}
@@ -30,7 +31,7 @@
 </head>
 <body>
 
-    <canvas id="webglcanvas" style="border: none;" width="1500" height="500"></canvas>
+    <canvas id="webglcanvas" style="border: none;" width="1200" height="500"></canvas>
 
 </body>
 </html>

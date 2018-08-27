@@ -71,19 +71,19 @@ function initGL(canvas)
 }
 
 // TO DO: Create the functions for each of the figures.
-function createOcta(gl, translation, rotationAxis)
+function createOcta(gl, translation, rotationAxis, translationAxis, altTranslation)
 {    
     // Vertex Data
     var vertexBuffer2;
     vertexBuffer2 = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer2);
 
-    var v1 = [0.0, -1.5, 0.0];
-    var v2 = [-1.5, 0.0, 0.0];
-    var v3 = [0.0, 0.0, 1.5];
-    var v4 = [1.5, 0.0, 0.0];
-    var v5 = [0.0, 0.0, -1.5];
-    var v6 = [0.0, 1.5, 0.0];
+    var v1 = [0.0, -.75, 0.0];
+    var v2 = [-.75, 0.0, 0.0];
+    var v3 = [0.0, 0.0, .75];
+    var v4 = [.75, 0.0, 0.0];
+    var v5 = [0.0, 0.0, -.75];
+    var v6 = [0.0, .75, 0.0];
 
 
     var verts = [
@@ -124,7 +124,7 @@ function createOcta(gl, translation, rotationAxis)
         [0.0, 1.0, 1.0, 1.0], // color 4 
         [1.0, 1.0, 0.0, 1.0], // color 5
         [1.0, 0.0, 1.0, 1.0], // color 6
-        [0.1, 0.3, 0.8, 1.0], // color 7
+        [1.0, 0.6, 0.4, 1.0], // color 7
         [0.4, 0.6, 0.2, 1.0], // color 8
     ];
 
@@ -165,6 +165,9 @@ function createOcta(gl, translation, rotationAxis)
 
     mat4.translate(octa.modelViewMatrix, octa.modelViewMatrix, translation);
 
+    var timerun = 0;
+    var up = true;
+
     octa.update = function()
     {
         var now = Date.now();
@@ -172,13 +175,29 @@ function createOcta(gl, translation, rotationAxis)
         this.currentTime = now;
         var fract = deltat / duration;
         var angle = Math.PI * 2 * fract;
-    
-        // Rotates a mat4 by the given angle
-        // mat4 out the receiving matrix
-        // mat4 a the matrix to rotate
-        // Number rad the angle to rotate the matrix by
-        // vec3 axis the axis to rotate around
+
+        //Variable "up" determines the direction the triangle will move each frame. 
+        //It is inverted every time the time counter reaches ~4.3 seconds, and the counter is reset
+        timerun += deltat;
         mat4.rotate(this.modelViewMatrix, this.modelViewMatrix, angle, rotationAxis);
+
+        if(up)
+        {
+            mat4.translate(this.modelViewMatrix, this.modelViewMatrix, translationAxis);
+        }
+
+        else
+        {
+            mat4.translate(this.modelViewMatrix, this.modelViewMatrix, altTranslation);
+        }
+        
+        if(timerun >= 4300)
+        {
+            up = !up;
+            timerun = 0;
+        }
+        console.log(timerun);
+        console.log(up);
     };
     
     return octa;
@@ -239,11 +258,11 @@ function createScutoid(gl, translation, rotationAxis)
     var faceColors = [
         [1.0, 0.0, 0.0, 1.0], // color 1
         [0.0, 1.0, 0.0, 1.0], // color 2
-        [0.0, 0.0, 1.0, 1.0], // color 3
-        [0.0, 1.0, 1.0, 1.0], // color 4 
+        [0.0, 1.0, 1.0, 1.0], // color 3
+        [0.8, 0.5, 0.0, 1.0], // color 4 
         [1.0, 1.0, 0.0, 1.0], // color 5
         [1.0, 0.0, 1.0, 1.0], // color 6
-        [0.1, 0.3, 0.8, 1.0], // color 7
+        [0.1, 0.3, 0.6, 1.0], // color 7
         [0.4, 0.6, 0.2, 1.0], // color 8
     ];
 
@@ -310,7 +329,7 @@ function createScutoid(gl, translation, rotationAxis)
     return scutoid;
 }
 
-function createPyramid(gl, translation, rotationAxis, translationAxis, altTranslation)
+function createPyramid(gl, translation, rotationAxis)
 {    
     // Vertex Data
     var vertexBuffer;
@@ -319,11 +338,11 @@ function createPyramid(gl, translation, rotationAxis, translationAxis, altTransl
 
     
 
-    var v1 = [0.0, -.5, -1.0/2];
-    var v2 = [-.95/2, -.5, -.31/2];
-    var v3 = [-.59/2, -.5, .81/2];
-    var v4 = [.59/2, -.5, .81/2];
-    var v5 = [.95/2, -.5, -.31/2];
+    var v1 = [0.0, -1.5, -1.0];
+    var v2 = [-.95, -1.5, -.31];
+    var v3 = [-.59, -1.5, .81];
+    var v4 = [.59, -1.5, .81];
+    var v5 = [.95, -1.5, -.31];
     var v6 = [0.0, 1.0, 0.0];
 
     var verts = [
@@ -399,8 +418,7 @@ function createPyramid(gl, translation, rotationAxis, translationAxis, altTransl
 
     mat4.translate(pyramid.modelViewMatrix, pyramid.modelViewMatrix, translation);
 
-    var timerun = 0;
-    var up = true;
+    
     pyramid.update = function()
     {
         var now = Date.now();
@@ -408,29 +426,13 @@ function createPyramid(gl, translation, rotationAxis, translationAxis, altTransl
         this.currentTime = now;
         var fract = deltat / duration;
         var angle = Math.PI * 2 * fract;
-
-        //Variable "up" determines the direction the triangle will move each frame. 
-        //It is inverted every time the time counter reaches ~4.3 seconds, and the counter is reset
-        timerun += deltat;
+        var up = false;
+        // Rotates a mat4 by the given angle
+        // mat4 out the receiving matrix
+        // mat4 a the matrix to rotate
+        // Number rad the angle to rotate the matrix by
+        // vec3 axis the axis to rotate around
         mat4.rotate(this.modelViewMatrix, this.modelViewMatrix, angle, rotationAxis);
-
-        if(up)
-        {
-            mat4.translate(this.modelViewMatrix, this.modelViewMatrix, translationAxis);
-        }
-
-        else
-        {
-            mat4.translate(this.modelViewMatrix, this.modelViewMatrix, altTranslation);
-        }
-        
-        if(timerun >= 4300)
-        {
-            up = !up;
-            timerun = 0;
-        }
-        console.log(timerun);
-        console.log(up);
     };
     
     return pyramid;
